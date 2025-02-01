@@ -1,6 +1,5 @@
 import { Component, ReactNode } from 'react';
 
-
 interface Props {
   children: ReactNode;
 }
@@ -16,16 +15,22 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   static getDerivedStateFromError() {
-    return { hasError: false };
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('Ошибка перехвачена ErrorBoundary:', error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
       return (
-        <h2>Ошибка! Попробуйте обновить страницу!</h2>
+        <div style={{ color: 'red', textAlign: 'center', padding: '20px' }}>
+          <h2>Что-то пошло не так...</h2>
+          <p>Попробуйте обновить страницу.</p>
+        </div>
       );
     }
-    ;
-    return (this.props.children);
+    return this.props.children;
   }
 }
