@@ -4,6 +4,8 @@ interface Props {
   name: string;
 }
 
+
+
 export class Card extends Component<Props> {
 
   render() {
