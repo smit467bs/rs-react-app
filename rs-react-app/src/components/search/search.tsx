@@ -2,6 +2,7 @@ import { Component } from 'react';
 
 interface Props {
   onSearch: (search: string) => void;
+  defaultValue: string;
 }
 
 interface State {
@@ -12,7 +13,7 @@ export class Search extends Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    this.state = { query: '' };
+    this.state = { query: this.props.defaultValue || '' };
   }
 
   handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +28,12 @@ export class Search extends Component<Props, State> {
     return (
       <div>
 
-        <input type="text" value={this.state.query} onChange={this.handleChange} />
+        <input
+          type="text"
+          value={this.state.query}
+          onChange={this.handleChange}
+          placeholder="Введите запрос..."
+        />
         <button onClick={this.hangleSearch}>Search</button>
       </div>
     );
