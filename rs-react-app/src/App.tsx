@@ -1,10 +1,11 @@
 import './App.css';
+import { Search } from './components/search/search.tsx';
 
 function App() {
 
   return (
     <>
-      <h1>hello world</h1>
+      <Search />
     </>
   );
 }
