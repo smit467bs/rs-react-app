@@ -10,7 +10,6 @@ interface State {
 }
 
 export class Search extends Component<Props, State> {
-
   constructor(props: Props) {
     super(props);
     this.state = { query: this.props.defaultValue || '' };
@@ -27,7 +26,6 @@ export class Search extends Component<Props, State> {
   render() {
     return (
       <div>
-
         <input
           type="text"
           value={this.state.query}
@@ -38,5 +36,4 @@ export class Search extends Component<Props, State> {
       </div>
     );
   }
-
 }

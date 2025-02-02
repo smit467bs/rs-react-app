@@ -5,9 +5,7 @@ interface Props {
   url: string;
 }
 
-
 export class Card extends Component<Props> {
-
   render() {
     return (
       <div>
@@ -16,5 +14,4 @@ export class Card extends Component<Props> {
       </div>
     );
   }
-
 }

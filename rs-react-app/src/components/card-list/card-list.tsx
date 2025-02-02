@@ -11,7 +11,6 @@ interface Pokemon {
 }
 
 export class CardList extends Component<Props> {
-
   render() {
     return (
       <div>
@@ -21,5 +20,4 @@ export class CardList extends Component<Props> {
       </div>
     );
   }
-
 }
