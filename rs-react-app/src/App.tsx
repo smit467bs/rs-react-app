@@ -1,7 +1,6 @@
 import './App.css';
 import { Search } from './components/search/search.tsx';
 import { CardList } from './components/card-list/card-list.tsx';
-import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary.tsx';
 import { Component } from 'react';
 
 const API_URL = 'https://pokeapi.co/api/v2/pokemon?limit=10';
