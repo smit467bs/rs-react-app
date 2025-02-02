@@ -12,7 +12,6 @@ interface Pokemon {
 
 export class CardList extends Component<Props> {
   render() {
-
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4 overflow-hidden break-words">
         {this.props.items.map((item) => (
