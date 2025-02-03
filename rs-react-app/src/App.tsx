@@ -40,7 +40,7 @@ export class App extends Component<{ '' }, State> {
 
       const data = await response.json();
       this.setState({
-        items: data.results.map((item) => item),
+        items: data.results.map((item: Pokemon) => item),
         isLoading: false,
       });
     } catch (e) {
