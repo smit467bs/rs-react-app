@@ -36,7 +36,18 @@ export class App extends Component<{ '' }, State> {
 
     try {
       const response = query ? await fetch(API_URL + query) : await fetch(API_URL + '?limit=10');
-      if (!response.ok) throw new Error('Ошибка загрузки');
+      if (!response.ok) {
+        if (response.status === 404) {
+          this.setState({
+            items: [],
+            error: `Извините, мы не нашли по запросу: "${query}"`,
+            isLoading: false,
+          });
+          return;
+        } else {
+          throw new Error('Ошибка загрузки');
+        }
+      }
 
       const data = await response.json();
       this.setState({
