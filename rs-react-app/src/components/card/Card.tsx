@@ -7,7 +7,7 @@ interface Props {
 }
 
 interface State {
-  error: Error;
+  error: string | null;
   pokeInfo: Poke | null;
 }
 
@@ -33,9 +33,9 @@ export class Card extends Component<Props, State> {
       } else {
         throw new Error(`Could not fetch data from ${this.props.url}`);
       }
-    } catch (e) {
+    } catch (error) {
       throw new Error(
-        `Could not fetch data from ${(this.props.url, e.message)}`
+        `Could not fetch data from ${(this.props.url, String(error))}`
       );
     }
   }

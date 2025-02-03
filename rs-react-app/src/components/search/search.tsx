@@ -20,15 +20,14 @@ export class Search extends Component<Props, State> {
   };
 
   hangleSearch = () => {
-    this.state.query
-      ? this.props.onSearch(this.state.query.trim().toLowerCase())
-      : this.props.onSearch('');
+    if (this.state.query) {
+      this.props.onSearch(this.state.query.trim().toLowerCase());
+    } else this.props.onSearch('');
   };
 
   render() {
     return (
       <div>
-
         <input
           className="
           search-input border-l-black rounded-2xl shadow-sm text-black focus:ring-red-500"

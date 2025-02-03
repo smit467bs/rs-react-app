@@ -18,8 +18,8 @@ interface Pokemon {
   url: string;
 }
 
-export class App extends Component<{ '' }, State> {
-  constructor(props: { '' }) {
+export class App extends Component<object, State> {
+  constructor(props: object) {
     super(props);
     this.state = {
       items: [],
@@ -55,17 +55,17 @@ export class App extends Component<{ '' }, State> {
       this.setState({
         items: query
           ? [
-            {
-              name: data.name,
-              url: `https://pokeapi.co/api/v2/pokemon/${data.name}`,
-            },
-          ]
-          : data.results.map((item) => item),
+              {
+                name: data.name,
+                url: `https://pokeapi.co/api/v2/pokemon/${data.name}`,
+              },
+            ]
+          : data.results.map((item: Pokemon) => item),
         isLoading: false,
       });
-    } catch (e) {
+    } catch (error) {
       this.setState({
-        error: e,
+        error: String(error),
         isLoading: false,
       });
     }
@@ -82,9 +82,7 @@ export class App extends Component<{ '' }, State> {
 
     return (
       <>
-        <h1 className="text-3xl text-white mb-6">
-          PokeApi search
-        </h1>
+        <h1 className="text-3xl text-white mb-6">PokeApi search</h1>
 
         <div className="w-full max-w-screen-xl max-w-md bg-white shadow-md rounded-lg p-4 mb-6">
           <Search
@@ -93,8 +91,6 @@ export class App extends Component<{ '' }, State> {
           />
         </div>
         <div className="w-full max-w-screen-xl mx-auto px-4 min-h-screen bg-gray-100 flex flex-col items-center p-4">
-
-
           {this.state.isLoading ? (
             <p className="text-blue-500 text-lg">Loading...</p>
           ) : null}
@@ -111,6 +107,7 @@ export class App extends Component<{ '' }, State> {
             Выкинуть ошибку
           </button>
         </div>
-      </>);
+      </>
+    );
   }
 }
