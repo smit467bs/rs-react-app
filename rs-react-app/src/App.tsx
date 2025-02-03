@@ -3,7 +3,7 @@ import { Search } from './components/search/search.tsx';
 import { CardList } from './components/card-list/card-list.tsx';
 import { Component } from 'react';
 
-const API_URL = 'https://pokeapi.co/api/v2/pokemon?limit=10';
+const API_URL = 'https://pokeapi.co/api/v2/pokemon/';
 
 interface State {
   items: Pokemon[];
@@ -35,12 +35,15 @@ export class App extends Component<{ '' }, State> {
     localStorage.setItem('searchQuery', query.trim().toLowerCase());
 
     try {
-      const response = await fetch(API_URL);
+      const response = query ? await fetch(API_URL + query) : await fetch(API_URL + '?limit=10');
       if (!response.ok) throw new Error('Ошибка загрузки');
 
       const data = await response.json();
       this.setState({
-        items: data.results.map((item: Pokemon) => item),
+        items: query ? [{
+          name: data.name,
+          url: `https://pokeapi.co/api/v2/pokemon/${data.name}`,
+        }] : data.results.map((item) => item),
         isLoading: false,
       });
     } catch (e) {

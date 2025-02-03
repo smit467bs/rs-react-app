@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { Poke } from '../../interfaces';
 
 interface Props {
   name: string;
@@ -10,15 +11,6 @@ interface State {
   pokeInfo: Poke | null;
 }
 
-interface Poke {
-  id: string;
-  name: string;
-  weight: string;
-  height: string;
-  sprites: {
-    front_default: string | null;
-  };
-}
 
 export class Card extends Component<Props, State> {
   constructor(props: Props) {
@@ -44,7 +36,7 @@ export class Card extends Component<Props, State> {
       }
     } catch (e) {
       throw new Error(
-        `Could not fetch data from ${(this.props.url, e.message)}`
+        `Could not fetch data from ${(this.props.url, e.message)}`,
       );
     }
   }

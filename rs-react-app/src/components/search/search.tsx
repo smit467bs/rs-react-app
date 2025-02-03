@@ -20,7 +20,7 @@ export class Search extends Component<Props, State> {
   };
 
   hangleSearch = () => {
-    this.props.onSearch(this.state.query.trim().toLowerCase());
+    this.state.query ? this.props.onSearch(this.state.query.trim().toLowerCase()) : this.props.onSearch('');
   };
 
   render() {
