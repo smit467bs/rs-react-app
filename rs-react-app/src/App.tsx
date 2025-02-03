@@ -35,7 +35,9 @@ export class App extends Component<{ '' }, State> {
     localStorage.setItem('searchQuery', query.trim().toLowerCase());
 
     try {
-      const response = query ? await fetch(API_URL + query) : await fetch(API_URL + '?limit=10');
+      const response = query
+        ? await fetch(API_URL + query)
+        : await fetch(API_URL + '?limit=10');
       if (!response.ok) {
         if (response.status === 404) {
           this.setState({
@@ -51,10 +53,14 @@ export class App extends Component<{ '' }, State> {
 
       const data = await response.json();
       this.setState({
-        items: query ? [{
-          name: data.name,
-          url: `https://pokeapi.co/api/v2/pokemon/${data.name}`,
-        }] : data.results.map((item) => item),
+        items: query
+          ? [
+            {
+              name: data.name,
+              url: `https://pokeapi.co/api/v2/pokemon/${data.name}`,
+            },
+          ]
+          : data.results.map((item) => item),
         isLoading: false,
       });
     } catch (e) {
@@ -75,32 +81,36 @@ export class App extends Component<{ '' }, State> {
     }
 
     return (
-      <div className="min-h-screen  bg-gray-100 flex flex-col items-center p-4">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">
+      <>
+        <h1 className="text-3xl text-white mb-6">
           PokeApi search
         </h1>
-        <div className="w-full max-w-md bg-white shadow-md rounded-lg p-4 mb-6">
+
+        <div className="w-full max-w-screen-xl max-w-md bg-white shadow-md rounded-lg p-4 mb-6">
           <Search
             onSearch={this.fetchData}
             defaultValue={this.state.searchQuery}
           />
         </div>
-        {this.state.isLoading ? (
-          <p className="text-blue-500 text-lg">Loading...</p>
-        ) : null}
-        {this.state.error ? (
-          <p className="text-red-500 text-lg">{this.state.error}</p>
-        ) : null}
-        <div className="w-full max-w-md">
-          <CardList items={this.state.items} />
+        <div className="w-full max-w-screen-xl mx-auto px-4 min-h-screen bg-gray-100 flex flex-col items-center p-4">
+
+
+          {this.state.isLoading ? (
+            <p className="text-blue-500 text-lg">Loading...</p>
+          ) : null}
+          {this.state.error ? (
+            <p className="text-red-500 text-lg">{this.state.error}</p>
+          ) : null}
+          <div className="w-full max-w-screen-lg">
+            <CardList items={this.state.items} />
+          </div>
+          <button
+            className="mt-6 bg-black hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+            onClick={this.throwTestError}
+          >
+            Выкинуть ошибку
+          </button>
         </div>
-        <button
-          className="mt-6 bg-black hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-          onClick={this.throwTestError}
-        >
-          Выкинуть ошибку
-        </button>
-      </div>
-    );
+      </>);
   }
 }
