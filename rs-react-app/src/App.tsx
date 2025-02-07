@@ -1,7 +1,7 @@
 import './App.css';
 
 import { Route, Routes } from 'react-router';
-import { SearchPage } from './components/search-page/SearchPage.tsx';
+import { SearchPage } from './pages/search-page/SearchPage.tsx';
 
 
 export const App = () => {

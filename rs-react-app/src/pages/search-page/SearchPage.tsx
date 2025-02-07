@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchQuery } from '../../hooks/useSearchQuery.ts';
-import { CardList } from '../card-list/card-list.tsx';
-import { Search } from '../search/search.tsx';
+import { CardList } from '../../components/card-list/card-list.tsx';
+import { Search } from '../../components/search/search.tsx';
 
 
 const API_URL = 'https://pokeapi.co/api/v2/pokemon/';
