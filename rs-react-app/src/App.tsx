@@ -2,6 +2,7 @@ import './App.css';
 import { Search } from './components/search/search.tsx';
 import { CardList } from './components/card-list/card-list.tsx';
 import { useState, useEffect } from 'react';
+import { useSearchQuery } from './hooks/useSearchQuery.ts';
 
 const API_URL = 'https://pokeapi.co/api/v2/pokemon/';
 
@@ -16,7 +17,7 @@ export const App = () => {
   const [items, setItems] = useState<Pokemon[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState(localStorage.getItem('searchQuery') || '');
+  const [searchQuery, setSearchQuery] = useSearchQuery();
   const [throwError, setThrowError] = useState(false);
 
   useEffect(() => {
@@ -64,6 +65,11 @@ export const App = () => {
     }
   };
 
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    fetchData(query);
+  };
+
   if (throwError) {
     throw new Error('Тест ошибки');
   }
@@ -75,7 +81,7 @@ export const App = () => {
 
       <div className="w-full max-w-screen-xl max-w-md bg-white shadow-md rounded-lg p-4 mb-6">
         <Search
-          onSearch={fetchData}
+          onSearch={handleSearch}
           defaultValue={searchQuery}
         />
       </div>
