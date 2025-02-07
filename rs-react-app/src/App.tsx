@@ -1,7 +1,7 @@
 import './App.css';
 import { Search } from './components/search/search.tsx';
 import { CardList } from './components/card-list/card-list.tsx';
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 
 const API_URL = 'https://pokeapi.co/api/v2/pokemon/';
 
@@ -18,20 +18,21 @@ interface Pokemon {
   url: string;
 }
 
-export class App extends Component<object, State> {
-  constructor(props: object) {
-    super(props);
-    this.state = {
-      items: [],
-      isLoading: false,
-      error: null,
-      searchQuery: localStorage.getItem('searchQuery') || '',
-      throwError: false,
-    };
-  }
+export const App = () => {
 
-  fetchData = async (query: string) => {
-    this.setState({ isLoading: true, error: null });
+  const [items, setItems] = useState<Pokemon[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState(localStorage.getItem('searchQuery') || '');
+  const [throwError, setThrowError] = useState(false);
+
+  useEffect(() => {
+    fetchData(searchQuery);
+  }, []);
+
+  const fetchData = async (query: string) => {
+    setIsLoading(true);
+    setError(null);
     localStorage.setItem('searchQuery', query.trim().toLowerCase());
 
     try {
@@ -40,74 +41,68 @@ export class App extends Component<object, State> {
         : await fetch(API_URL + '?limit=10');
       if (!response.ok) {
         if (response.status === 404) {
-          this.setState({
-            items: [],
-            error: `Извините, мы не нашли по запросу: "${query}"`,
-            isLoading: false,
-          });
+          setItems([]);
+          setError(`Извините, мы не нашли по запросу: "${query}"`);
+          setIsLoading(false);
           return;
         } else {
+          setError('Ошибка загрузки');
           throw new Error('Ошибка загрузки');
         }
       }
 
       const data = await response.json();
-      this.setState({
-        items: query
-          ? [
-              {
-                name: data.name,
-                url: `https://pokeapi.co/api/v2/pokemon/${data.name}`,
-              },
-            ]
+
+      setItems(
+        query ? [
+            {
+              name: data.name,
+              url: `https://pokeapi.co/api/v2/pokemon/${data.name}`,
+            },
+          ]
           : data.results.map((item: Pokemon) => item),
-        isLoading: false,
-      });
+      );
+      setIsLoading(false);
     } catch (error) {
-      this.setState({
-        error: String(error),
-        isLoading: false,
-      });
+      setError(String(error));
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  throwTestError = () => {
-    this.setState({ throwError: true });
-  };
-
-  render() {
-    if (this.state.throwError) {
-      throw new Error('Тест ошибки');
-    }
-
-    return (
-      <>
-        <h1 className="text-3xl text-white mb-6">PokeApi search</h1>
-
-        <div className="w-full max-w-screen-xl max-w-md bg-white shadow-md rounded-lg p-4 mb-6">
-          <Search
-            onSearch={this.fetchData}
-            defaultValue={this.state.searchQuery}
-          />
-        </div>
-        <div className="w-full max-w-screen-xl mx-auto px-4 min-h-screen bg-gray-100 flex flex-col items-center p-4">
-          {this.state.isLoading ? (
-            <p className="text-blue-500 text-lg">Loading...</p>
-          ) : null}
-          {this.state.error ? (
-            <p className="text-red-500 text-lg">{this.state.error}</p>
-          ) : null}
-          <div className="w-full max-w-screen-lg">
-            <CardList items={this.state.items} />
-          </div>
-          <button
-            className="mt-6 bg-black hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-            onClick={this.throwTestError}
-          >
-            Выкинуть ошибку
-          </button>
-        </div>
-      </>
-    );
+  if (throwError) {
+    throw new Error('Тест ошибки');
   }
-}
+
+
+  return (
+    <>
+      <h1 className="text-3xl text-white mb-6">PokeApi search</h1>
+
+      <div className="w-full max-w-screen-xl max-w-md bg-white shadow-md rounded-lg p-4 mb-6">
+        <Search
+          onSearch={fetchData}
+          defaultValue={searchQuery}
+        />
+      </div>
+      <div
+        className="w-full max-w-screen-xl mx-auto px-4 min-h-screen bg-gray-100 flex flex-col items-center p-4">
+        {isLoading ? (
+          <p className="text-blue-500 text-lg">Loading...</p>
+        ) : null}
+        {error ? (
+          <p className="text-red-500 text-lg">{error}</p>
+        ) : null}
+        <div className="w-full max-w-screen-lg">
+          <CardList items={items} />
+        </div>
+        <button
+          className="mt-6 bg-black hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+          onClick={() => setThrowError(true)}
+        >
+          Выкинуть ошибку
+        </button>
+      </div>
+    </>
+  );
+};
