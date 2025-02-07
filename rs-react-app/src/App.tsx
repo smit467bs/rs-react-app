@@ -5,13 +5,6 @@ import { useState, useEffect } from 'react';
 
 const API_URL = 'https://pokeapi.co/api/v2/pokemon/';
 
-interface State {
-  items: Pokemon[];
-  isLoading: boolean;
-  error: string | null;
-  searchQuery: string;
-  throwError: boolean;
-}
 
 interface Pokemon {
   name: string;
@@ -34,6 +27,7 @@ export const App = () => {
     setIsLoading(true);
     setError(null);
     localStorage.setItem('searchQuery', query.trim().toLowerCase());
+    setSearchQuery(query);
 
     try {
       const response = query
