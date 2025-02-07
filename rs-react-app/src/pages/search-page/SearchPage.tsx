@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useSearchQuery } from '../../hooks/useSearchQuery.ts';
 import { CardList } from '../../components/card-list/card-list.tsx';
 import { Search } from '../../components/search/search.tsx';
+import { Pagination } from '../../components/pagination/pagination.tsx';
+import { useSearchParams } from 'react-router';
 
 
 const API_URL = 'https://pokeapi.co/api/v2/pokemon/';
@@ -19,55 +21,63 @@ export const SearchPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useSearchQuery();
   const [throwError, setThrowError] = useState(false);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const page = Number(searchParams.get('page')) || 1;
 
   useEffect(() => {
-    fetchData(searchQuery);
-  }, []);
+    const fetchData = async (query: string) => {
+      setIsLoading(true);
+      setError(null);
+      localStorage.setItem('searchQuery', query.trim().toLowerCase());
+      setSearchQuery(query);
 
-  const fetchData = async (query: string) => {
-    setIsLoading(true);
-    setError(null);
-    localStorage.setItem('searchQuery', query.trim().toLowerCase());
-    setSearchQuery(query);
-
-    try {
-      const response = query
-        ? await fetch(API_URL + query)
-        : await fetch(API_URL + '?limit=10');
-      if (!response.ok) {
-        if (response.status === 404) {
-          setItems([]);
-          setError(`Извините, мы не нашли по запросу: "${query}"`);
-          setIsLoading(false);
-          return;
-        } else {
-          setError('Ошибка загрузки');
-          throw new Error('Ошибка загрузки');
+      try {
+        const response = query
+          ? await fetch(`${API_URL}${query}`)
+          : await fetch(`${API_URL}?limit=10&offset=${(page - 1) * 10}`);
+        if (!response.ok) {
+          if (response.status === 404) {
+            setItems([]);
+            setError(`Извините, мы не нашли по запросу: "${query}"`);
+            setIsLoading(false);
+            return;
+          } else {
+            setError('Ошибка загрузки');
+            throw new Error('Ошибка загрузки');
+          }
         }
+
+        const data = await response.json();
+
+        setItems(
+          query ? [
+              {
+                name: data.name,
+                url: `https://pokeapi.co/api/v2/pokemon/${data.name}`,
+              },
+            ]
+            : data.results.map((item: Pokemon) => item),
+        );
+        setTotalPages(query ? 1 : Math.ceil(data.count / 10));
+        setIsLoading(false);
+      } catch (error) {
+        setError(String(error));
+      } finally {
+        setIsLoading(false);
       }
+    };
+    fetchData(searchQuery);
+  }, [searchQuery, page]);
 
-      const data = await response.json();
-
-      setItems(
-        query ? [
-            {
-              name: data.name,
-              url: `https://pokeapi.co/api/v2/pokemon/${data.name}`,
-            },
-          ]
-          : data.results.map((item: Pokemon) => item),
-      );
-      setIsLoading(false);
-    } catch (error) {
-      setError(String(error));
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    fetchData(query);
+  };
+
+  const handlePageChange = (page: number) => {
+    setSearchParams({ page: String(page) });
   };
 
   if (throwError) {
@@ -95,6 +105,9 @@ export const SearchPage = () => {
         ) : null}
         <div className="w-full max-w-screen-lg">
           <CardList items={items} />
+          {!error && !isLoading && totalPages > 1 && (
+            <Pagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
+          )}
         </div>
         <button
           className="mt-6 bg-black hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
