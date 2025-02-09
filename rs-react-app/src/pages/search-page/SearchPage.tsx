@@ -4,6 +4,7 @@ import { CardList } from '../../components/card-list/card-list.tsx';
 import { Search } from '../../components/search/search.tsx';
 import { Pagination } from '../../components/pagination/pagination.tsx';
 import { useSearchParams } from 'react-router';
+import { DetailsPage } from '../details-page/details-page.tsx';
 
 
 const API_URL = 'https://pokeapi.co/api/v2/pokemon/';
@@ -105,10 +106,12 @@ export const SearchPage = () => {
         ) : null}
         <div className="w-full max-w-screen-lg">
           <CardList items={items} />
+          <DetailsPage />
           {!error && !isLoading && totalPages > 1 && (
             <Pagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
           )}
         </div>
+
         <button
           className="mt-6 bg-black hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
           onClick={() => setThrowError(true)}
