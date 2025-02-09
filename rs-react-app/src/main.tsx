@@ -12,5 +12,5 @@ createRoot(document.getElementById('root') as HTMLElement).render(
         <App />
       </BrowserRouter>
     </ErrorBoundary>
-  </StrictMode>,
+  </StrictMode>
 );

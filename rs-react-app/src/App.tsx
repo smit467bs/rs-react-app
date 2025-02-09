@@ -4,7 +4,6 @@ import { Route, Routes } from 'react-router';
 import { SearchPage } from './pages/search-page/SearchPage.tsx';
 import { NotFoundPage } from './pages/not-found/not-found-page.tsx';
 
-
 export const App = () => {
   return (
     <Routes>
@@ -12,5 +11,4 @@ export const App = () => {
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
-
 };

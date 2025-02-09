@@ -5,11 +5,8 @@ interface Props {
   defaultValue: string;
 }
 
-
 export const Search = ({ onSearch, defaultValue }: Props) => {
-
   const [query, setQuery] = useState(defaultValue || '');
-
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
@@ -20,8 +17,6 @@ export const Search = ({ onSearch, defaultValue }: Props) => {
       onSearch(query.trim().toLowerCase());
     } else onSearch('');
   };
-
-
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import { Component, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Poke } from '../../interfaces';
 import { useSearchParams } from 'react-router';
 
@@ -7,12 +7,10 @@ interface Props {
   url: string;
 }
 
-
 export const Card = ({ name, url }: Props) => {
-
   const [searchParams, setSearchParams] = useSearchParams();
   const [pokeInfo, setPokeInfo] = useState<Poke | null>(null);
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const response = await fetch(`${url}`);
       if (response.ok) {
@@ -22,17 +20,13 @@ export const Card = ({ name, url }: Props) => {
         throw new Error(`Could not fetch data from ${url}`);
       }
     } catch (error) {
-      throw new Error(
-        `Could not fetch data from ${(url + String(error))}`,
-      );
+      throw new Error(`Could not fetch data from ${url + String(error)}`);
     }
-  };
-
+  }, [url]);
 
   useEffect(() => {
-
     fetchData();
-  }, [url]);
+  }, [searchParams, fetchData]);
 
   const handleCardClick = (name: string) => {
     setSearchParams((params) => {
@@ -41,14 +35,12 @@ export const Card = ({ name, url }: Props) => {
     });
   };
 
-
   return (
-    <div className="bg-white shadow-md rounded-lg p-2 border border-gray-200 hover:shadow-xl transition duration-300"
-         onClick={() => handleCardClick(name)}
+    <div
+      className="bg-white shadow-md rounded-lg p-2 border border-gray-200 hover:shadow-xl transition duration-300"
+      onClick={() => handleCardClick(name)}
     >
-      <h3 className="text-xl font-semibold text-gray-800">
-        {name}
-      </h3>
+      <h3 className="text-xl font-semibold text-gray-800">{name}</h3>
       {pokeInfo ? (
         <div className="text-gray-700 text-sm">
           {pokeInfo.sprites.front_default ? (
