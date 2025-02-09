@@ -59,11 +59,14 @@ export const DetailsPage = () => {
       {error && <p className="tex-red-500">{error}</p>}
 
       {pokemon && (
-        <div>
-          <h2 className="text-2xl font-bold">{pokemon.name}</h2>
-          <img src={pokemon.sprites.front_default} alt={pokemon.name} />
-          <p>Weight: {pokemon.weight}</p>
-          <p>Height: {pokemon.height}</p>
+        <div className="items-center
+        text-gray-700 text-sm">
+          <h2 className="text-xl font-semibold text-gray-800">{pokemon.name}</h2>
+          <img
+            className="w-32 h-32 mx-auto mb-2 border border-gray-300 rounded-lg"
+            src={pokemon.sprites.front_default} alt={pokemon.name} />
+          <p><span className="font-medium"> Weight: </span>{pokemon.weight}</p>
+          <p><span className="font-medium"> Height: </span> {pokemon.height}</p>
 
           <button
             className="mt-4 bg-red-500 text-white px-4 py-2 rounded"

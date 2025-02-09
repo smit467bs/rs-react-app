@@ -79,7 +79,10 @@ export const SearchPage = () => {
   };
 
   const handlePageChange = (page: number) => {
-    setSearchParams({ page: String(page) });
+    setSearchParams((params) => {
+      params.set('page', String(page));
+      return params;
+    });
   };
 
   if (throwError) {

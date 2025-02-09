@@ -22,6 +22,7 @@ export const Search = ({ onSearch, defaultValue }: Props) => {
   };
 
 
+
   return (
     <div>
       <input

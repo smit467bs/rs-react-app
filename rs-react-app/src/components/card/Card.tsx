@@ -1,5 +1,6 @@
 import { Component, useEffect, useState } from 'react';
 import { Poke } from '../../interfaces';
+import { useSearchParams } from 'react-router';
 
 interface Props {
   name: string;
@@ -9,7 +10,7 @@ interface Props {
 
 export const Card = ({ name, url }: Props) => {
 
-
+  const [searchParams, setSearchParams] = useSearchParams();
   const [pokeInfo, setPokeInfo] = useState<Poke | null>(null);
   const fetchData = async () => {
     try {
@@ -33,9 +34,18 @@ export const Card = ({ name, url }: Props) => {
     fetchData();
   }, [url]);
 
+  const handleCardClick = (name: string) => {
+    setSearchParams((params) => {
+      params.set('details', name);
+      return params;
+    });
+  };
+
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-2 border border-gray-200 hover:shadow-xl transition duration-300">
+    <div className="bg-white shadow-md rounded-lg p-2 border border-gray-200 hover:shadow-xl transition duration-300"
+         onClick={() => handleCardClick(name)}
+    >
       <h3 className="text-xl font-semibold text-gray-800">
         {name}
       </h3>
@@ -48,14 +58,6 @@ export const Card = ({ name, url }: Props) => {
               alt={pokeInfo.name}
             />
           ) : null}
-          <p>
-            <span className="font-medium">Weight: </span>{' '}
-            {pokeInfo.weight}
-          </p>
-          <p>
-            <span className="font-medium">Height: </span>{' '}
-            {pokeInfo.height}
-          </p>
         </div>
       ) : (
         <p className="text-gray-600">Loading.....</p>
