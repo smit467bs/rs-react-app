@@ -25,6 +25,7 @@ export const SearchPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const selectedPokemon = searchParams.get('details');
   const page = Number(searchParams.get('page')) || 1;
 
   useEffect(() => {
@@ -88,36 +89,45 @@ export const SearchPage = () => {
 
   return (
     <>
-      <h1 className="text-3xl text-white mb-6">PokeApi search</h1>
-
-      <div className="w-full max-w-screen-xl max-w-md bg-white shadow-md rounded-lg p-4 mb-6">
-        <Search
-          onSearch={handleSearch}
-          defaultValue={searchQuery}
-        />
-      </div>
       <div
-        className="w-full max-w-screen-xl mx-auto px-4 min-h-screen bg-gray-100 flex flex-col items-center p-4">
-        {isLoading ? (
-          <p className="text-blue-500 text-lg">Loading...</p>
-        ) : null}
-        {error ? (
-          <p className="text-red-500 text-lg">{error}</p>
-        ) : null}
-        <div className="w-full max-w-screen-lg">
-          <CardList items={items} />
-          <DetailsPage />
-          {!error && !isLoading && totalPages > 1 && (
-            <Pagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
-          )}
-        </div>
-
-        <button
-          className="mt-6 bg-black hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-          onClick={() => setThrowError(true)}
+        className="relative flex"
+      >
+        <div
+          className={`w-${selectedPokemon ? '2/3' : 'full'}`}
         >
-          Выкинуть ошибку
-        </button>
+          <h1 className="text-3xl text-white mb-6">PokeApi search</h1>
+
+          <div className="w-full max-w-screen-xl max-w-md bg-white shadow-md rounded-lg p-4 mb-6">
+            <Search
+              onSearch={handleSearch}
+              defaultValue={searchQuery}
+            />
+          </div>
+          <div
+            className="w-full max-w-screen-xl mx-auto px-4 min-h-screen bg-gray-100 flex flex-col items-center p-4">
+            {isLoading ? (
+              <p className="text-blue-500 text-lg">Loading...</p>
+            ) : null}
+            {error ? (
+              <p className="text-red-500 text-lg">{error}</p>
+            ) : null}
+            <div className="w-full max-w-screen-lg">
+              <CardList items={items} />
+              <DetailsPage />
+              {!error && !isLoading && totalPages > 1 && (
+                <Pagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
+              )}
+            </div>
+
+            <button
+              className="mt-6 bg-black hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+              onClick={() => setThrowError(true)}
+            >
+              Выкинуть ошибку
+            </button>
+          </div>
+        </div>
+        <DetailsPage />
       </div>
     </>
   );
