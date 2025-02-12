@@ -17,10 +17,10 @@ export const Card = ({ name, url }: Props) => {
         const data = await response.json();
         setPokeInfo(data);
       } else {
-        throw new Error(`Could not fetch data from ${url}`);
+        console.error(`Could not fetch data from ${url}`);
       }
     } catch (error) {
-      throw new Error(`Could not fetch data from ${url + String(error)}`);
+      console.error(`Could not fetch data from ${url}:`, error);
     }
   }, [url]);
 
